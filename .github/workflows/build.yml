@@ -6,13 +6,17 @@ jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Configure CMake
-      run: cmake -Bout/ .
-    - name: Build
-      run: cd out; make -j8 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: Output
-        path: out/
+      - uses: actions/checkout@v1
+      - name: Prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bison flex
+      - name: Configure CMake
+        run: cmake -Bout/ .
+      - name: Build
+        run: cd out; make -j8 
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Output
+          path: out/
