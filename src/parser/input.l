@@ -33,6 +33,9 @@ extern int isatty(int fd);
 INTEGER [0-9]+
 IDENTIFIER [_a-zA-Z][\._a-zA-Z0-9]*
 DATE [0-9]{4}-[0-9]{2}-[0-9]{2}
+PIPE \|
+
+
 
 %%
 
@@ -43,6 +46,10 @@ DATE [0-9]{4}-[0-9]{2}-[0-9]{2}
 "printREPORT" return PRINT_REPORT;
 "exitPLS" return EXIT_PLS;
 
+{PIPE} {
+  // this is silly but it is needed, because | also means alternate rules in regex
+  return T_PIPE;
+}
 {INTEGER} {
   yylval->integer = atoi(yytext);
   return T_INTEGER;
@@ -67,11 +74,8 @@ DATE [0-9]{4}-[0-9]{2}-[0-9]{2}
   return T_DATE;
 }
 
-
-
 \r?\n return T_NEWLINE;
 [ |\t] {;}
-'|' return T_PIPE;
 '>' return T_GT;
 
 
