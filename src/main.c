@@ -3,10 +3,8 @@
 
 #include "main.h"
 
-using namespace std;
-
 int main()
 {
-	cout << "Hello CMake." << endl;
+	printf("Hello CMake.\n");
 	return 0;
 }
