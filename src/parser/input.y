@@ -87,7 +87,10 @@ void yyerror(YYLTYPE* yylloc, void* yyscanner, char const* msg);
 	RUN_PLS
 	PRINT_REPORT
 	EXIT_PLS
-	DATE
+
+%type<integer> integer;
+%type<date> date;
+%type<identifier> identifier;
 
 %type<node>
 	add_period
@@ -101,6 +104,10 @@ void yyerror(YYLTYPE* yylloc, void* yyscanner, char const* msg);
 
 %%
 
+integer: T_INTEGER { $$ = $1; };
+date: T_DATE { $$ = $1; };
+identifier: T_IDENTIFIER { $$ = $1; };
+
 line: 
 	  T_NEWLINE { YYACCEPT; }
   | add_period T_NEWLINE { YYACCEPT; }
@@ -111,31 +118,31 @@ line:
 ;
 
 add_period:
-	ADD_PERIOD T_DATE T_DATE {
+	ADD_PERIOD date date {
 		// TODO
 	}
 ;
 
 add_order:
-	ADD_ORDER T_IDENTIFIER DATE T_INTEGER T_IDENTIFIER {
+	ADD_ORDER identifier date integer identifier {
 		// TODO
 	}
 ;
 
 add_batch:
-	ADD_BATCH T_IDENTIFIER {
+	ADD_BATCH identifier {
 		// TODO
 	}
 ;
 
 run_pls:
-	RUN_PLS T_IDENTIFIER T_PIPE print_report {
+	RUN_PLS identifier T_PIPE print_report {
 		// TODO
 	}
 ;
 
 print_report:
-	PRINT_REPORT T_GT T_IDENTIFIER {
+	PRINT_REPORT T_GT identifier {
 		// TODO
 	}
 ;
@@ -144,6 +151,6 @@ print_report:
 
 void yyerror(YYLTYPE* yylloc, void* yyscanner, char const* msg) {
   printf("parse error: %s\n", msg);
-  printf("%i %i\n", yylloc->first_line, yylloc->first_column);
+  // printf("%i %i\n", yylloc->first_line, yylloc->first_column);
   fflush(stdout);
 }
