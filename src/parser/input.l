@@ -6,12 +6,15 @@
 %option warn 8bit reentrant ecs
 %option yylineno
 %option noline
+%option debug
 
 %{
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "context.h"
 
 #include "input.parse.h"
 
@@ -56,10 +59,8 @@ PIPE \|
 }
 
 {IDENTIFIER} {
-  size_t len = strlen(yytext);
-  char *mem = memcpy(yyalloc(len + 1, yyscanner), yytext, len);
-  mem[len] = '\0';
-  yylval->identifier = mem;
+  yylval->identifier.begin = yytext;
+  yylval->identifier.end = yytext + yyleng;
   return T_IDENTIFIER;
 }
 
@@ -74,10 +75,9 @@ PIPE \|
   return T_DATE;
 }
 
+">" return T_GT;
 \r?\n return T_NEWLINE;
 [ |\t] {;}
-'>' return T_GT;
-
 
 %%
 

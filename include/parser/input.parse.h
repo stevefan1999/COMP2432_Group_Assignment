@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.5.4.  */
+/* A Bison parser, made by GNU Bison 3.6.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_ROOT_VS_COMP2432_GROUP_ASSIGNMENT_E2B135E0_6779_43C0_AC64_7C9BFCEC07B9_OUT_BUILD_LINUX_GCC_DEBUG_INPUT_PARSE_H_INCLUDED
 # define YY_YY_ROOT_VS_COMP2432_GROUP_ASSIGNMENT_E2B135E0_6779_43C0_AC64_7C9BFCEC07B9_OUT_BUILD_LINUX_GCC_DEBUG_INPUT_PARSE_H_INCLUDED
@@ -46,27 +47,33 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 
 #define YY_NO_UNISTD_H
+#include "context.h"
 
 
-/* Token type.  */
+
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    T_INTEGER = 258,
-    T_DATE = 259,
-    T_IDENTIFIER = 260,
-    T_NEWLINE = 261,
-    T_PIPE = 262,
-    T_GT = 263,
-    ADD_PERIOD = 264,
-    ADD_ORDER = 265,
-    ADD_BATCH = 266,
-    RUN_PLS = 267,
-    PRINT_REPORT = 268,
-    EXIT_PLS = 269,
-    DATE = 270
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    T_INTEGER = 258,               /* "integer"  */
+    T_DATE = 259,                  /* "date"  */
+    T_IDENTIFIER = 260,            /* "identifier"  */
+    T_NEWLINE = 261,               /* T_NEWLINE  */
+    T_PIPE = 262,                  /* T_PIPE  */
+    T_GT = 263,                    /* T_GT  */
+    ADD_PERIOD = 264,              /* ADD_PERIOD  */
+    ADD_ORDER = 265,               /* ADD_ORDER  */
+    ADD_BATCH = 266,               /* ADD_BATCH  */
+    RUN_PLS = 267,                 /* RUN_PLS  */
+    PRINT_REPORT = 268,            /* PRINT_REPORT  */
+    EXIT_PLS = 269                 /* EXIT_PLS  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -75,13 +82,12 @@ union YYSTYPE
 {
 
 	int integer;
+	pls_date date;
 	struct {
-		int year;
-		int month;
-		int day;
-	} date;
-	const char *identifier;
-	struct node *node;
+		const char *begin;
+		const char *end;
+	} identifier;
+	const char *report_name;
 
 
 };

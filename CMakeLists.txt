@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD 99)
 find_package(BISON)
 find_package(FLEX)
 
-file(GLOB PROJECT_SOURCES
+file(GLOB_RECURSE PROJECT_SOURCES
   ${PROJECT_SOURCE_DIR}/src/*.c
   ${PROJECT_SOURCE_DIR}/src/*.cpp
 )
@@ -23,6 +23,13 @@ target_include_directories(
 
 target_link_libraries(${PROJECT_NAME} PUBLIC "-static")
 
+
+add_library(klib "${PROJECT_SOURCE_DIR}/extern/klib/kstring.c")
+target_include_directories(
+  klib
+  PUBLIC ${PROJECT_SOURCE_DIR}/extern/klib/
+)
+
 set(PARSER_LOCATION "${PROJECT_SOURCE_DIR}/src/parser")
 
 bison_target(input_parse ${PARSER_LOCATION}/input.y ${CMAKE_CURRENT_BINARY_DIR}/input.parse.c)
@@ -32,9 +39,15 @@ add_library(input_parser ${BISON_input_parse_OUTPUTS} ${FLEX_input_lex_OUTPUTS})
 target_include_directories(
   input_parser
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+  PUBLIC ${PROJECT_SOURCE_DIR}/include
+)
+
+target_link_libraries(
+  input_parser
+  PUBLIC klib
 )
 
 target_link_libraries(
   ${PROJECT_NAME}
-  PRIVATE input_parser
+  PUBLIC klib input_parser
 )
