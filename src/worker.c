@@ -29,7 +29,7 @@ void pls_run(pls_queue_command *cmd) {
   }
   if (fn != NULL) {
     pls_schedule sched = fn(&info);
-    pls_schedule_print(&sched, canon_name, cmd->data.schedule.periods[0], NULL);
+    pls_schedule_print(&sched, canon_name, cmd->data.schedule.periods[0], cmd->data.schedule.output_file);
   }
 
 }

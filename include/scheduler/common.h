@@ -149,6 +149,7 @@ static pls_queue_command pls_schedule_info_serialize_queue_command(pls_schedule_
     }
   };
 
+  memset(out.data.schedule.output_file, 0, sizeof out.data.schedule.output_file);
   memcpy(out.data.schedule.output_file, output_file, strlen(output_file));
   memcpy(out.data.schedule.periods, info->periods.a, sizeof(pls_period) * out.data.schedule.n_periods);
   memcpy(out.data.schedule.orders, info->orders.a, sizeof(pls_order)*out.data.schedule.n_orders);

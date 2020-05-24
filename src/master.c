@@ -92,7 +92,7 @@ void on_master(poll_pair fdtab) {
       YY_BUFFER_STATE yybuf = yy_scan_string(buf, yyscanner);
 
       if (yyparse(yyscanner) == 0) {
-        printf("OK: %s\n", buf);
+        printf("OK\n");
       }
       yy_delete_buffer(yybuf, yyscanner);
 
