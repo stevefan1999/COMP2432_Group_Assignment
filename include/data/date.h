@@ -33,10 +33,10 @@ static int pls_date_comparator(const void* _a, const void* _b) {
 static pls_date pls_date_add_days(pls_date d, int days) {
   pls_date out = d;
   out.day += days;
-  out.month += out.day / 30;
-  out.year += out.month / 12;
-  out.month = MAX(1, out.month % 12);
-  out.day = MAX(1, out.day % 30);
+  out.month += out.day / (30 + 1);
+  out.year += out.month / (12 + 1);
+  out.month = MAX(1, out.month % (12 + 1));
+  out.day = MAX(1, out.day % (30 + 1));
 
   return out;
 }

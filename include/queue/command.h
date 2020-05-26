@@ -24,7 +24,7 @@ typedef struct pls_queue_command {
       int n_periods;
       int n_orders;
       pls_period periods[1];
-      pls_order orders[128];
+      pls_order orders[1024];
     } schedule;
   } data;
 } pls_queue_command;

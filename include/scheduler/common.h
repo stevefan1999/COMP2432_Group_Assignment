@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdio.h>
 #include <kvec.h>
+#include <stdio.h>
 
 #include "data/order.h"
 #include "data/period.h"
@@ -19,7 +19,7 @@ typedef struct pls_schedule_info {
   kvec_t(pls_order) orders;
 } pls_schedule_info;
 
-static void pls_schedule_info_init(pls_schedule_info *self) {
+static void pls_schedule_info_init(pls_schedule_info* self) {
   kv_init(self->periods);
   kv_init(self->orders);
 }
@@ -29,20 +29,19 @@ static void pls_schedule_info_destroy(pls_schedule_info* self) {
   kv_destroy(self->orders);
 }
 
-
 typedef struct {
   struct {
     kvec_t(pls_schedule_entry) x, y, z;
   } plant;
 } pls_schedule;
 
-static void pls_schedule_init(pls_schedule *self) {
+static void pls_schedule_init(pls_schedule* self) {
   kv_init(self->plant.x);
   kv_init(self->plant.y);
   kv_init(self->plant.z);
 }
 
-static void pls_schedule_print(pls_schedule* self, const char *algo, pls_period period, const char *output_file) {
+static void pls_schedule_print(pls_schedule* self, const char* algo, pls_period period, const char* output_file) {
 
   int total_days;
   pls_convert_period_to_interval(&period, &total_days);
@@ -85,13 +84,13 @@ static void pls_schedule_print(pls_schedule* self, const char *algo, pls_period 
   int sum = 0;
   for (int i = 0; i < kv_size(self->plant.x); i++) {
     pls_date_format(pls_date_add_days(period.start, kv_A(self->plant.x, i).day), date_buf, sizeof date_buf);
-    printf("%-16s %-16s %-16d\n", kv_A(self->plant.x, i).identifier, date_buf, kv_A(self->plant.x, i).count);
+    fprintf(fp, "%-16s %-16s %-16d\n", kv_A(self->plant.x, i).identifier, date_buf, kv_A(self->plant.x, i).count);
     sum += kv_A(self->plant.x, i).count;
   }
 
-  printf("Days in use: %d days\n", kv_size(self->plant.x));
-  printf("Products produced: %d in total\n", sum);
-  printf("Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.x) / total_days * 1.0);
+  fprintf(fp, "Days in use: %d days\n", kv_size(self->plant.x));
+  fprintf(fp, "Products produced: %d in total\n", sum);
+  fprintf(fp, "Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.x) / total_days * 1.0);
 
   fprintf(fp, "\nFactory Y:\n");
   fprintf(fp, "%-16s %-16s %-16s\n", "ORDER NUMBER", "DATE", "QUANTITY");
@@ -101,13 +100,13 @@ static void pls_schedule_print(pls_schedule* self, const char *algo, pls_period 
   sum = 0;
   for (int i = 0; i < kv_size(self->plant.y); i++) {
     pls_date_format(pls_date_add_days(period.start, kv_A(self->plant.y, i).day), date_buf, sizeof date_buf);
-    printf("%-16s %-16s %-16d\n", kv_A(self->plant.y, i).identifier, date_buf, kv_A(self->plant.y, i).count);
+    fprintf(fp, "%-16s %-16s %-16d\n", kv_A(self->plant.y, i).identifier, date_buf, kv_A(self->plant.y, i).count);
     sum += kv_A(self->plant.y, i).count;
   }
 
-  printf("Days in use: %d days\n", kv_size(self->plant.y));
-  printf("Products produced: %d in total\n", sum);
-  printf("Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.y) / total_days * 1.0);
+  fprintf(fp, "Days in use: %d days\n", kv_size(self->plant.y));
+  fprintf(fp, "Products produced: %d in total\n", sum);
+  fprintf(fp, "Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.y) / total_days * 1.0);
   accum += sum;
 
   sum = 0;
@@ -121,10 +120,10 @@ static void pls_schedule_print(pls_schedule* self, const char *algo, pls_period 
   }
   accum += sum;
 
-  printf("Days in use: %d days\n", kv_size(self->plant.z));
-  printf("Products produced: %d in total\n", sum);
-  printf("Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.z) / total_days * 1.0);
-  printf("Overall utilization: %g%%\n", 100.0 * accum / (300*kv_size(self->plant.x) + 400*kv_size(self->plant.y) + 500*kv_size(self->plant.z)) * 1.0);
+  fprintf(fp, "Days in use: %d days\n", kv_size(self->plant.z));
+  fprintf(fp, "Products produced: %d in total\n", sum);
+  fprintf(fp, "Utilization of the plant: %g%%\n", 100.0 * kv_size(self->plant.z) / total_days * 1.0);
+  fprintf(fp, "Overall utilization: %g%%\n", 100.0 * accum / (300 * kv_size(self->plant.x) + 400 * kv_size(self->plant.y) + 500 * kv_size(self->plant.z)) * 1.0);
 
   if (fp != stdout) {
     fclose(fp);
@@ -145,14 +144,13 @@ static pls_queue_command pls_schedule_info_serialize_queue_command(pls_schedule_
             .periods = kv_A(info->periods, 0),
             .n_periods = kv_size(info->periods),
             .n_orders = kv_size(info->orders),
-        }
-    }
+        } }
   };
 
   memset(out.data.schedule.output_file, 0, sizeof out.data.schedule.output_file);
   memcpy(out.data.schedule.output_file, output_file, strlen(output_file));
   memcpy(out.data.schedule.periods, info->periods.a, sizeof(pls_period) * out.data.schedule.n_periods);
-  memcpy(out.data.schedule.orders, info->orders.a, sizeof(pls_order)*out.data.schedule.n_orders);
+  memcpy(out.data.schedule.orders, info->orders.a, sizeof(pls_order) * out.data.schedule.n_orders);
 
   return out;
 }

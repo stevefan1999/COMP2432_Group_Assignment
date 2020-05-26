@@ -5,10 +5,10 @@
 #include "date.h"
 
 typedef struct pls_order {
-  const char order_no[32];
+  const char order_no[8];
   pls_date due;
   int quantity;
-  const char name[32];
+  const char name[16];
 } pls_order;
 
 static int pls_order_comparator_by_date(const void* _a, const void* _b) {
