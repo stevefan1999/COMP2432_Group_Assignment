@@ -90,11 +90,7 @@ void yyerror(YYLTYPE* yylloc, void* yyscanner, char const* msg);
 
 %type<integer> integer;
 %type<date> date;
-%type<identifier> identifier;
-
-%type<report_name>
-	print_report
-;
+%type<identifier> identifier print_report;
 
 %start line
 
@@ -130,20 +126,24 @@ add_order:
 ;
 
 add_batch:
-	ADD_BATCH identifier {
-		pls_context_add_batch(yyget_extra(yyscanner), $2.begin);
+	ADD_BATCH identifier[file] {
+		char buf[1024] = {};
+		memcpy(buf, $file.begin, (size_t)($file.end - $file.begin));
+		pls_context_add_batch(yyget_extra(yyscanner), buf);
 	}
 ;
 
 run_pls:
 	RUN_PLS identifier[algo] T_PIPE print_report[iden] {
-		pls_context_run_pls(yyget_extra(yyscanner), $algo.begin, $iden);
+		char buf[1024] = {};
+		memcpy(buf, $iden.begin, (size_t)($iden.end - $iden.begin));
+		pls_context_run_pls(yyget_extra(yyscanner), $algo.begin, buf);
 	}
 ;
 
 print_report:
 	PRINT_REPORT T_GT identifier[iden] {
-		$$ = $iden.begin;
+		$$ = $iden;
 	}
 ;
 
