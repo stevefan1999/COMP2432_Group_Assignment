@@ -96,11 +96,16 @@ void on_master(poll_pair fdtab) {
       }
       yy_delete_buffer(yybuf, yyscanner);
 
-      state = ASK_COMMAND;
+      if (context.should_stop) {
+        state = EXIT;
+      } else {
+        state = ASK_COMMAND;
+      }
     } break;
     case EXIT: {
       yylex_destroy(yyscanner);
       pls_context_destroy(&context);
+      printf("Exit command received, thank you for using the program!\n");
     } break;
     default:;
     }

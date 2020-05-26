@@ -110,7 +110,7 @@ line:
 	| add_order T_NEWLINE { YYACCEPT; }
 	| add_batch T_NEWLINE { YYACCEPT; }
 	| run_pls T_NEWLINE { YYACCEPT; }
-	| EXIT_PLS T_NEWLINE { YYACCEPT; }
+	| exit_pls T_NEWLINE { YYACCEPT; }
 ;
 
 add_period:
@@ -144,6 +144,12 @@ run_pls:
 print_report:
 	PRINT_REPORT T_GT identifier[iden] {
 		$$ = $iden.begin;
+	}
+;
+
+exit_pls:
+	EXIT_PLS {
+		pls_context_exit_pls(yyget_extra(yyscanner));
 	}
 ;
 

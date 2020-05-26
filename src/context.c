@@ -10,6 +10,7 @@
 void pls_context_init(pls_context_t* self) {
   kv_init(self->info.orders);
   kv_init(self->info.periods);
+  self->should_stop = false;
 }
 
 void pls_context_add_period(pls_context_t* self, pls_period period) {
@@ -44,6 +45,10 @@ void pls_context_run_pls(pls_context_t* self, const char* algo, const char* outp
 
   memcpy(&buf.data.schedule.algorithm, algo, sizeof(buf.data.schedule.algorithm));
   memcpy(&next_cmd, &buf, sizeof(pls_queue_command));
+}
+
+void pls_context_exit_pls(pls_context_t* self) {
+  self->should_stop = true;
 }
 
 void pls_context_destroy(pls_context_t* self) {
