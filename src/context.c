@@ -28,12 +28,9 @@ void pls_context_add_batch(pls_context_t* self, const char* file_name) {
   if ((fp = fopen(file_name, "r")) != NULL) {
     yyscan_t yyscanner;
     yylex_init_extra(self, &yyscanner);
-    YY_BUFFER_STATE yybuf = yy_create_buffer(fp, YY_BUF_SIZE, yyscanner);
-    while (yyparse(yyscanner) == 0) {
-      yy_flush_buffer(yybuf, yyscanner);
-    }
-    yy_delete_buffer(yybuf, yyscanner);
-
+    yyrestart(fp, yyscanner);
+    while (yyparse(yyscanner) == 0) {}
+    yylex_destroy(yyscanner);
     fclose(fp);
   }
 }

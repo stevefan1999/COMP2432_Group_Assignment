@@ -77,6 +77,8 @@ void yyerror(YYLTYPE* yylloc, void* yyscanner, char const* msg);
 // identifier
 %token<identifier> T_IDENTIFIER "identifier"
 
+%token YYEOF 0 "end of file"
+
 %token
 	T_NEWLINE
 	T_PIPE
@@ -102,11 +104,17 @@ identifier: T_IDENTIFIER { $$ = $1; };
 
 line: 
 	  T_NEWLINE { YYACCEPT; }
-  | add_period T_NEWLINE { YYACCEPT; }
-	| add_order T_NEWLINE { YYACCEPT; }
-	| add_batch T_NEWLINE { YYACCEPT; }
-	| run_pls T_NEWLINE { YYACCEPT; }
-	| exit_pls T_NEWLINE { YYACCEPT; }
+	|	YYEOF { YYABORT; }
+  | operations T_NEWLINE { YYACCEPT; }
+	| operations YYEOF { YYABORT; }
+;
+
+operations: 
+	| add_period
+	| add_order
+	| add_batch
+	| run_pls
+	| exit_pls
 ;
 
 add_period:

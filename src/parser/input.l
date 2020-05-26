@@ -6,7 +6,6 @@
 %option warn 8bit reentrant ecs
 %option yylineno
 %option noline
-%option debug
 
 %{
 #include <stddef.h>
@@ -31,13 +30,14 @@
  */
 
 extern int isatty(int fd);
+
+#define yyterminate() return YYEOF
 %}
 
 INTEGER [0-9]+
 IDENTIFIER [_a-zA-Z][\._a-zA-Z0-9]*
 DATE [0-9]{4}-[0-9]{2}-[0-9]{2}
 PIPE \|
-
 
 
 %%
