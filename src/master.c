@@ -106,11 +106,12 @@ void on_master(poll_pair fdtab) {
       yylex_destroy(yyscanner);
       pls_context_destroy(&context);
       printf("Exit command received, thank you for using the program!\n");
-    } break;
+      goto exit;
+    }
     default:;
     }
 
     on_master_pull_status_from_worker(fdtab, &init);
-
   }
+exit:;
 }
